@@ -1,0 +1,781 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>800</width>
+    <height>480</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QLabel" name="pressure4_label">
+    <property name="geometry">
+     <rect>
+      <x>140</x>
+      <y>10</y>
+      <width>151</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>16</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>R3</string>
+    </property>
+   </widget>
+   <widget class="QLCDNumber" name="Readout1">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>355</y>
+      <width>91</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="digitCount">
+     <number>7</number>
+    </property>
+   </widget>
+   <widget class="QLCDNumber" name="Readout3">
+    <property name="geometry">
+     <rect>
+      <x>140</x>
+      <y>40</y>
+      <width>91</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="digitCount">
+     <number>7</number>
+    </property>
+   </widget>
+   <widget class="QLCDNumber" name="Readout0">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>275</y>
+      <width>91</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="smallDecimalPoint">
+     <bool>false</bool>
+    </property>
+    <property name="digitCount">
+     <number>7</number>
+    </property>
+    <property name="segmentStyle">
+     <enum>QLCDNumber::Filled</enum>
+    </property>
+   </widget>
+   <widget class="QLCDNumber" name="Readout2">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>40</y>
+      <width>91</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="digitCount">
+     <number>7</number>
+    </property>
+    <property name="value" stdset="0">
+     <double>0.000000000000000</double>
+    </property>
+    <property name="intValue" stdset="0">
+     <number>0</number>
+    </property>
+   </widget>
+   <widget class="QLabel" name="MPV_label">
+    <property name="geometry">
+     <rect>
+      <x>520</x>
+      <y>210</y>
+      <width>81</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>16</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>MPV's</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="ignite_label">
+    <property name="geometry">
+     <rect>
+      <x>240</x>
+      <y>210</y>
+      <width>91</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>16</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>Igniter</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="pstate_label">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>210</y>
+      <width>131</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>16</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>Pressurize</string>
+    </property>
+   </widget>
+   <widget class="QGraphicsView" name="state1_red">
+    <property name="geometry">
+     <rect>
+      <x>620</x>
+      <y>211</y>
+      <width>30</width>
+      <height>30</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QGraphicsView" name="state1_green">
+    <property name="geometry">
+     <rect>
+      <x>740</x>
+      <y>211</y>
+      <width>30</width>
+      <height>30</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QGraphicsView" name="state2_green">
+    <property name="geometry">
+     <rect>
+      <x>460</x>
+      <y>211</y>
+      <width>30</width>
+      <height>30</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QGraphicsView" name="state2_red">
+    <property name="geometry">
+     <rect>
+      <x>340</x>
+      <y>211</y>
+      <width>30</width>
+      <height>30</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QGraphicsView" name="state3_red">
+    <property name="geometry">
+     <rect>
+      <x>190</x>
+      <y>210</y>
+      <width>30</width>
+      <height>30</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="Line" name="line">
+    <property name="geometry">
+     <rect>
+      <x>650</x>
+      <y>210</y>
+      <width>91</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="orientation">
+     <enum>Qt::Horizontal</enum>
+    </property>
+   </widget>
+   <widget class="Line" name="line_2">
+    <property name="geometry">
+     <rect>
+      <x>370</x>
+      <y>210</y>
+      <width>91</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="orientation">
+     <enum>Qt::Horizontal</enum>
+    </property>
+   </widget>
+   <widget class="QLCDNumber" name="voltage_readout">
+    <property name="geometry">
+     <rect>
+      <x>580</x>
+      <y>46</y>
+      <width>100</width>
+      <height>50</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="pressure3_label">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>10</y>
+      <width>151</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>16</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>R2</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="voltage_label">
+    <property name="geometry">
+     <rect>
+      <x>580</x>
+      <y>10</y>
+      <width>151</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>16</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>Batt Voltage</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="pressure3_label_2">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>100</y>
+      <width>81</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>16</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>R7</string>
+    </property>
+   </widget>
+   <widget class="QLCDNumber" name="Readout7">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>130</y>
+      <width>91</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="digitCount">
+     <number>7</number>
+    </property>
+    <property name="value" stdset="0">
+     <double>0.000000000000000</double>
+    </property>
+    <property name="intValue" stdset="0">
+     <number>0</number>
+    </property>
+   </widget>
+   <widget class="QLabel" name="pressure2_label_2">
+    <property name="geometry">
+     <rect>
+      <x>470</x>
+      <y>10</y>
+      <width>81</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>16</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>R6</string>
+    </property>
+   </widget>
+   <widget class="QLCDNumber" name="Readout5">
+    <property name="geometry">
+     <rect>
+      <x>360</x>
+      <y>40</y>
+      <width>91</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="digitCount">
+     <number>7</number>
+    </property>
+   </widget>
+   <widget class="QLabel" name="pressure1_label_2">
+    <property name="geometry">
+     <rect>
+      <x>360</x>
+      <y>10</y>
+      <width>81</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>16</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>R5</string>
+    </property>
+   </widget>
+   <widget class="QLCDNumber" name="Readout6">
+    <property name="geometry">
+     <rect>
+      <x>470</x>
+      <y>40</y>
+      <width>91</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="digitCount">
+     <number>7</number>
+    </property>
+   </widget>
+   <widget class="QLCDNumber" name="Readout8">
+    <property name="geometry">
+     <rect>
+      <x>140</x>
+      <y>130</y>
+      <width>91</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="digitCount">
+     <number>7</number>
+    </property>
+   </widget>
+   <widget class="QLabel" name="pressure4_label_2">
+    <property name="geometry">
+     <rect>
+      <x>140</x>
+      <y>100</y>
+      <width>81</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>16</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>R8</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="pressure3_label_3">
+    <property name="geometry">
+     <rect>
+      <x>250</x>
+      <y>10</y>
+      <width>151</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>16</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>R4</string>
+    </property>
+   </widget>
+   <widget class="QLCDNumber" name="Readout4">
+    <property name="geometry">
+     <rect>
+      <x>250</x>
+      <y>40</y>
+      <width>91</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="digitCount">
+     <number>7</number>
+    </property>
+    <property name="value" stdset="0">
+     <double>0.000000000000000</double>
+    </property>
+    <property name="intValue" stdset="0">
+     <number>0</number>
+    </property>
+   </widget>
+   <widget class="QProgressBar" name="progressBar">
+    <property name="geometry">
+     <rect>
+      <x>140</x>
+      <y>290</y>
+      <width>631</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="maximum">
+     <number>5000</number>
+    </property>
+    <property name="value">
+     <number>1000</number>
+    </property>
+    <property name="textVisible">
+     <bool>false</bool>
+    </property>
+    <property name="orientation">
+     <enum>Qt::Horizontal</enum>
+    </property>
+    <property name="invertedAppearance">
+     <bool>false</bool>
+    </property>
+   </widget>
+   <widget class="QLabel" name="pstate_label_2">
+    <property name="geometry">
+     <rect>
+      <x>360</x>
+      <y>250</y>
+      <width>201</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>16</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>He</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="pressure2_label_3">
+    <property name="geometry">
+     <rect>
+      <x>250</x>
+      <y>100</y>
+      <width>91</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>16</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>R9</string>
+    </property>
+   </widget>
+   <widget class="QLCDNumber" name="Readout9">
+    <property name="geometry">
+     <rect>
+      <x>250</x>
+      <y>130</y>
+      <width>91</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="digitCount">
+     <number>7</number>
+    </property>
+   </widget>
+   <widget class="QLabel" name="pressure1_label_3">
+    <property name="geometry">
+     <rect>
+      <x>360</x>
+      <y>100</y>
+      <width>91</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>16</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>R10</string>
+    </property>
+   </widget>
+   <widget class="QLCDNumber" name="Readout10">
+    <property name="geometry">
+     <rect>
+      <x>360</x>
+      <y>130</y>
+      <width>91</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="digitCount">
+     <number>7</number>
+    </property>
+   </widget>
+   <widget class="QProgressBar" name="progressBar_2">
+    <property name="geometry">
+     <rect>
+      <x>140</x>
+      <y>370</y>
+      <width>631</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="maximum">
+     <number>150</number>
+    </property>
+    <property name="value">
+     <number>24</number>
+    </property>
+    <property name="textVisible">
+     <bool>false</bool>
+    </property>
+    <property name="orientation">
+     <enum>Qt::Horizontal</enum>
+    </property>
+    <property name="invertedAppearance">
+     <bool>false</bool>
+    </property>
+   </widget>
+   <widget class="QLabel" name="pstate_label_3">
+    <property name="geometry">
+     <rect>
+      <x>360</x>
+      <y>330</y>
+      <width>61</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>16</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>PNU</string>
+    </property>
+   </widget>
+   <widget class="QRadioButton" name="radioButton1">
+    <property name="geometry">
+     <rect>
+      <x>490</x>
+      <y>140</y>
+      <width>95</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Cryo</string>
+    </property>
+   </widget>
+   <widget class="QGraphicsView" name="HE_Range">
+    <property name="geometry">
+     <rect>
+      <x>140</x>
+      <y>284</y>
+      <width>49</width>
+      <height>35</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(15, 209, 5);</string>
+    </property>
+   </widget>
+   <widget class="QRadioButton" name="radioButton2">
+    <property name="geometry">
+     <rect>
+      <x>490</x>
+      <y>160</y>
+      <width>95</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Hot Fire</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>140</x>
+      <y>270</y>
+      <width>55</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>0 PSI</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_2">
+    <property name="geometry">
+     <rect>
+      <x>730</x>
+      <y>270</y>
+      <width>55</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>4500 PSI</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_3">
+    <property name="geometry">
+     <rect>
+      <x>140</x>
+      <y>350</y>
+      <width>55</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>0 PSI</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_4">
+    <property name="geometry">
+     <rect>
+      <x>730</x>
+      <y>350</y>
+      <width>55</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>150 PSI</string>
+    </property>
+   </widget>
+   <widget class="QRadioButton" name="radioButton3">
+    <property name="geometry">
+     <rect>
+      <x>490</x>
+      <y>120</y>
+      <width>95</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Leak Test</string>
+    </property>
+   </widget>
+   <widget class="QGraphicsView" name="HE_Target">
+    <property name="geometry">
+     <rect>
+      <x>162</x>
+      <y>284</y>
+      <width>4</width>
+      <height>35</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(255, 0, 0);</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="HE_T_Label">
+    <property name="geometry">
+     <rect>
+      <x>123</x>
+      <y>325</y>
+      <width>91</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Target +/- 200</string>
+    </property>
+   </widget>
+   <zorder>HE_Range</zorder>
+   <zorder>pressure4_label</zorder>
+   <zorder>Readout1</zorder>
+   <zorder>Readout3</zorder>
+   <zorder>Readout0</zorder>
+   <zorder>Readout2</zorder>
+   <zorder>MPV_label</zorder>
+   <zorder>ignite_label</zorder>
+   <zorder>pstate_label</zorder>
+   <zorder>state1_red</zorder>
+   <zorder>state1_green</zorder>
+   <zorder>state2_green</zorder>
+   <zorder>state2_red</zorder>
+   <zorder>state3_red</zorder>
+   <zorder>line</zorder>
+   <zorder>line_2</zorder>
+   <zorder>voltage_readout</zorder>
+   <zorder>pressure3_label</zorder>
+   <zorder>voltage_label</zorder>
+   <zorder>pressure3_label_2</zorder>
+   <zorder>Readout7</zorder>
+   <zorder>pressure2_label_2</zorder>
+   <zorder>Readout5</zorder>
+   <zorder>pressure1_label_2</zorder>
+   <zorder>Readout6</zorder>
+   <zorder>Readout8</zorder>
+   <zorder>pressure4_label_2</zorder>
+   <zorder>pressure3_label_3</zorder>
+   <zorder>Readout4</zorder>
+   <zorder>progressBar</zorder>
+   <zorder>pstate_label_2</zorder>
+   <zorder>pressure2_label_3</zorder>
+   <zorder>Readout9</zorder>
+   <zorder>pressure1_label_3</zorder>
+   <zorder>Readout10</zorder>
+   <zorder>progressBar_2</zorder>
+   <zorder>pstate_label_3</zorder>
+   <zorder>radioButton1</zorder>
+   <zorder>radioButton2</zorder>
+   <zorder>label</zorder>
+   <zorder>label_2</zorder>
+   <zorder>label_3</zorder>
+   <zorder>label_4</zorder>
+   <zorder>radioButton3</zorder>
+   <zorder>HE_Target</zorder>
+   <zorder>HE_T_Label</zorder>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>800</width>
+     <height>26</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
