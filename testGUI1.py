@@ -22,11 +22,43 @@ TOPIC_1 = "RELAY"
 TOPIC_2 = "DATA"
 TOPIC_3 = "STATE"
 
+mqtt_client = mqtt.Client()
+mqtt_client.connect(HOST, port=port, keepalive=60)
+
 GPIO.setmode(GPIO.BOARD)
 GPIO.setup(12, GPIO.IN)
 GPIO.setup(16, GPIO.IN)
 GPIO.setup(18, GPIO.IN)
 GPIO.setup(36, GPIO.IN)
+
+def lox_mpv(channel):
+    if GPIO.input(36):
+        mqtt_client.publish(TOPIC_1,b'LOX_MPV_OPEN')
+    else:
+        mqtt_client.publish(TOPIC_1,b'LOX_MPV_CLOSE')
+
+def ch4_mpv(channel):
+    if GPIO.input(18):
+        mqtt_client.publish(TOPIC_1,b'CH4_MPV_OPEN')
+    else:
+        mqtt_client.publish(TOPIC_1,b'CH4_MPV_CLOSE')
+
+def ignitor(channel):
+    if GPIO.input(16):
+        mqtt_client.publish(TOPIC_1,b'IGNITOR_ON')
+    else:
+        mqtt_client.publish(TOPIC_1,b'IGNITOR_OFF')
+
+def launch(channel):
+    if GPIO.input(12):
+        mqtt_client.publish(TOPIC_1,b'LAUNCH')
+    else:
+        mqtt_client.publish(TOPIC_1,b'ABORT')
+
+GPIO.add_event_detect(12, GPIO.BOTH, callback=launch)
+GPIO.add_event_detect(16, GPIO.BOTH, callback=ignitor)
+GPIO.add_event_detect(18, GPIO.BOTH, callback=ch4_mpv)
+GPIO.add_event_detect(36, GPIO.BOTH, callback=lox_mpv)
 
 class mainthread(QThread):
     STATEsignal = pyqtSignal('PyQt_PyObject')
@@ -69,8 +101,6 @@ class MainApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.radioButton1.toggled.connect(self.radio1)
         self.radioButton2.toggled.connect(self.radio2)
         self.radioButton3.toggled.connect(self.radio3)
-        self.mqtt_client = mqtt.Client()
-        self.mqtt_client.connect(HOST, port=port, keepalive=60)
 
     def init_ui(self):
         self.mythread1.start()
@@ -181,61 +211,13 @@ class MainApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.radioButton1.setChecked(False)
         self.radioButton2.setChecked(False)
 
-    def lox_mpv_open(self):
-        self.mqtt_client.publish(TOPIC_1,b'LOX_MPV_OPEN')
-        return
-
-    def lox_mpv_close(self):
-        self.mqtt_client.publish(TOPIC_1,b'LOX_MPV_CLOSE')
-        return
-
-    def ch4_mpv_open(self):
-        self.mqtt_client.publish(TOPIC_1,b'CH4_MPV_OPEN')
-        return
-    def ch4_mpv_close(self):
-        self.mqtt_client.publish(TOPIC_1,b'CH4_MPV_CLOSE')
-        return
-
-    def ignitor_on(self):
-        self.mqtt_client.publish(TOPIC_1,b'IGNITOR_ON')
-        return
-
-    def ignitor_off(self):
-        self.mqtt_client.publish(TOPIC_1,b'IGNITOR_OFF')
-        return
-
-    def launch(self):
-        self.mqtt_client.publish(TOPIC_1,b'LAUNCH')
-
-    def abort(self):
-        self.mqtt_client.publish(TOPIC_1,b'ABORT')
-
-    def switch_loop(self):
-        while(1):
-            if (GPIO.input(36) == True):
-              self.lox_mpv_open()
-            else:
-              self.lox_mpv_close()
-            if (GPIO.input(18) == True):
-              self.ch4_mpv_open()
-            else:
-              self.ch4_mpv_close()
-            if (GPIO.input(16) == True):
-              self.ignitor_on()
-            else:
-              self.ignitor_off()
-            if (GPIO.input(12) == True):
-              self.launch()
-            while (GPIO.input(12) == True):
-              pass
-            time.sleep(0.2)
 
 def main():
     app = QApplication(sys.argv)
     window = MainApp()
     window.show()
-    t1 = threading.Thread(target=MainApp.switch_loop, args=(window, ))
-    t1.start()
+    '''t1 = threading.Thread(target=MainApp.switch_loop, args=(window, ))
+    t1.start()'''
     app.exec_()
 
 if __name__ == '__main__':
