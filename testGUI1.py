@@ -10,8 +10,8 @@ from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 from PyQt5.uic import loadUiType
 import threading
-from PyQt5.QtCore import QThread, pyqtSignal
-import RPi.GPIO as GPIO
+from PyQt5.QtCore import QThread, pyqtSignal, QPropertyAnimation
+#import RPi.GPIO as GPIO
 
 qtCreatorFile = "RocketGUI1.ui"
 Ui_MainWindow, QtBaseClass = uic.loadUiType(qtCreatorFile)
@@ -20,7 +20,8 @@ HOST = "192.168.0.10"
 port = 1883
 TOPIC_1 = "RELAY"
 TOPIC_2 = "DATA"
-TOPIC_3 = "STATE"
+TOPIC_3 = "STATE" 
+counter = 1
 
 mqtt_client = mqtt.Client()
 mqtt_client.connect(HOST, port=port, keepalive=60)
@@ -83,6 +84,7 @@ class mainthread(QThread):
             C = (D.split(',')[0], D.split(',')[1], D.split(',')[2], D.split(',')[3])
             C = ('%4s' % C[0], '%4s' % C[1], '%4s' % C[2], '%4s' % C[3])
             self.DATAsignal.emit(C)
+            print(C)
         if msg.topic == "STATE":
             B = str(msg.payload)[2:-1]
             A = (B.split(',')[0], B.split(',')[1], B.split(',')[2], B.split(',')[3], B.split(',')[4], B.split(',')[5], B.split(',')[6])
@@ -101,6 +103,7 @@ class MainApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.radioButton1.toggled.connect(self.radio1)
         self.radioButton2.toggled.connect(self.radio2)
         self.radioButton3.toggled.connect(self.radio3)
+        self.checkBox.toggled.connect(self.radio4)
 
     def init_ui(self):
         self.mythread1.start()
@@ -211,6 +214,35 @@ class MainApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.radioButton1.setChecked(False)
         self.radioButton2.setChecked(False)
 
+    def radio4(self):
+        self.progressBar3.hide()
+        self.pstate_label_5.hide()
+        self.Readout3.hide()
+        self.label_5.hide()
+        self.progressBar2.move(130, 365)
+        self.Readout2.move(20, 350)
+        self.label_4.move(130, 345)
+        self.pstate_label_4.move(350, 330)
+        self.pstate_label_3.move(350, 225)
+        self.progressBar1.move(130, 265)
+        self.label_3.move(130, 245)
+        self.Readout1.move(20, 250)
+        if self.checkBox.isChecked() == False:
+            self.radio5()
+
+    def radio5(self):
+        self.progressBar3.show()
+        self.pstate_label_5.show()
+        self.Readout3.show()
+        self.label_5.show()
+        self.progressBar2.move(130, 325)
+        self.Readout2.move(20, 310)
+        self.label_4.move(130, 305)
+        self.pstate_label_4.move(350, 290)
+        self.pstate_label_3.move(350, 205)
+        self.progressBar1.move(130, 245)
+        self.label_3.move(130, 225)
+        self.Readout1.move(20, 230)
 
 def main():
     app = QApplication(sys.argv)
