@@ -11,7 +11,7 @@ from PyQt5.QtWidgets import *
 from PyQt5.uic import loadUiType
 import threading
 from PyQt5.QtCore import QThread, pyqtSignal, QPropertyAnimation
-#import RPi.GPIO as GPIO
+import RPi.GPIO as GPIO
 
 qtCreatorFile = "RocketGUI1.ui"
 Ui_MainWindow, QtBaseClass = uic.loadUiType(qtCreatorFile)
@@ -21,9 +21,14 @@ port = 1883
 TOPIC_1 = "RELAY"
 TOPIC_2 = "DATA"
 TOPIC_3 = "STATE" 
-counter = 1
+
+def on_disconnect(mqtt_client, userdata,rc=0):
+    print("Connection Lost.")
+    MainApp.alert()
+    mqtt_client.loop_stop()
 
 mqtt_client = mqtt.Client()
+mqtt_client.on_disconnect = on_disconnect
 mqtt_client.connect(HOST, port=port, keepalive=60)
 
 GPIO.setmode(GPIO.BOARD)
@@ -69,9 +74,15 @@ class mainthread(QThread):
         QThread.__init__(self)
         self.connect1()
 
+    def on_disconnect(self, mqtt_client, userdata,rc=0):
+        print("Connection Lost.")
+        self.MainApp.alert()
+        self.mqtt_client.loop_stop()
+
     def connect1(self):
         self.mqtt_client = mqtt.Client()
         self.mqtt_client.on_message = self.subscrib1
+        self.mqtt_client.on_disconnect = self.on_disconnect
         self.mqtt_client.connect(HOST, port=port, keepalive=60)
         self.mqtt_client.subscribe(TOPIC_2)
         self.mqtt_client.subscribe(TOPIC_3)
@@ -98,6 +109,8 @@ class MainApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.setupUi(self)
         self.mythread1 = mainthread()
         self.init_ui()
+        self.Alert1.hide()
+        self.label_6.hide()
         self.mythread1.STATEsignal.connect(self.progress1)
         self.mythread1.DATAsignal.connect(self.progress2)        
         self.radioButton1.toggled.connect(self.radio1)
@@ -164,55 +177,68 @@ class MainApp(QtWidgets.QMainWindow, Ui_MainWindow):
             self.Readout1.display(C[1])
             self.Readout2.display(C[2])
             self.Readout3.display(C[3])
-            self.progressBar0.setValue(float(C[0]))
-            self.progressBar1.setValue(float(C[1]))
-            self.progressBar2.setValue(float(C[2]))
-            self.progressBar3.setValue(float(C[3]))
             if float(C[0]) >= 4500:
                 self.Readout0.setAutoFillBackground(True)
                 p = self.Readout0.palette()
                 p.setColor(self.Readout0.backgroundRole(), Qt.red)
                 self.Readout0.setPalette(p)
                 self.progressBar0.setValue(4500)
+            if float(C[0]) < 4500:
+                self.Readout0.setAutoFillBackground(True)
+                p = self.Readout0.palette()
+                p.setColor(self.Readout0.backgroundRole(), Qt.white)
+                self.Readout0.setPalette(p)
+                self.progressBar0.setValue(float(C[0]))
             if float(C[1]) >= 4500:
                 self.Readout1.setAutoFillBackground(True)
                 c = self.Readout1.palette()
                 c.setColor(self.Readout1.backgroundRole(), Qt.red)
                 self.Readout1.setPalette(c)
                 self.progressBar1.setValue(150)
-            if float(C[2]) >= 4500:
+            if float(C[1]) < 4500:
+                self.Readout1.setAutoFillBackground(True)
+                c = self.Readout1.palette()
+                c.setColor(self.Readout1.backgroundRole(), Qt.white)
+                self.Readout1.setPalette(c)
+                self.progressBar1.setValue(float(C[1]))
+            if float(C[2]) >= 150:
                 self.Readout2.setAutoFillBackground(True)
                 h = self.Readout2.palette()
                 h.setColor(self.Readout2.backgroundRole(), Qt.red)
                 self.Readout2.setPalette(h)
                 self.progressBar2.setValue(150)
+            if float(C[2]) < 150:
+                self.Readout2.setAutoFillBackground(True)
+                h = self.Readout2.palette()
+                h.setColor(self.Readout2.backgroundRole(), Qt.white)
+                self.Readout2.setPalette(h)
+                self.progressBar2.setValue(float(C[2]))
             if float(C[3]) >= 4500:
                 self.Readout3.setAutoFillBackground(True)
                 k = self.Readout3.palette()
                 k.setColor(self.Readout3.backgroundRole(), Qt.red)
                 self.Readout3.setPalette(k)
                 self.progressBar3.setValue(150)
+            if float(C[3]) < 4500:
+                self.Readout3.setAutoFillBackground(True)
+                k = self.Readout3.palette()
+                k.setColor(self.Readout3.backgroundRole(), Qt.white)
+                self.Readout3.setPalette(k)
+                self.progressBar3.setValue(float(C[3]))
         except:
             pass
 
     def radio1(self):
-        self.HE_Range.move(241,284)
-        self.HE_Target.move(263,284)
-        self.HE_T_Label.move(224,325)
-        self.radioButton2.setChecked(False)
-        self.radioButton3.setChecked(False)
+        self.progressBar0.setMaximum(300)
+        self.label_2.setText('300 PSI')
 
     def radio2(self):
-        self.HE_Range.move(747,284)
-        self.HE_Target.move(769,284)
-        self.HE_T_Label.move(713,325)
-        self.radioButton1.setChecked(False)
-        self.radioButton3.setChecked(False)
+        self.progressBar0.setMaximum(4500)
+        self.label_2.setText('4500 PSI')
 
     def radio3(self):
-        self.HE_Range.move(200,284)
-        self.radioButton1.setChecked(False)
-        self.radioButton2.setChecked(False)
+        self.progressBar0.setMaximum(500)
+        self.label_2.setText('500 PSI')
 
     def radio4(self):
         self.progressBar3.hide()
@@ -243,6 +269,10 @@ class MainApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.progressBar1.move(130, 245)
         self.label_3.move(130, 225)
         self.Readout1.move(20, 230)
+
+    def alert(self):
+        self.Alert1.show()
+        self.label_6.show()
 
 def main():
     app = QApplication(sys.argv)
