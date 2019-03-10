@@ -20,12 +20,14 @@ HOST = "192.168.0.10"
 port = 1883
 TOPIC_1 = "RELAY"
 TOPIC_2 = "DATA"
-TOPIC_3 = "STATE" 
+TOPIC_3 = "STATE"
+counter = 1
+x = 4500
 
-def on_disconnect(mqtt_client, userdata,rc=0):
-    print("Connection Lost.")
-    MainApp.alert()
-    mqtt_client.loop_stop()
+def on_disconnect(mqtt_client, userdata, rc):
+	print("Connection Lost.")
+	MainApp.alert()
+	mqtt_client.loop_stop()
 
 mqtt_client = mqtt.Client()
 mqtt_client.on_disconnect = on_disconnect
@@ -37,52 +39,71 @@ GPIO.setup(16, GPIO.IN)
 GPIO.setup(18, GPIO.IN)
 GPIO.setup(36, GPIO.IN)
 
-def lox_mpv(channel):
-    if GPIO.input(36):
-        mqtt_client.publish(TOPIC_1,b'LOX_MPV_OPEN')
-    else:
-        mqtt_client.publish(TOPIC_1,b'LOX_MPV_CLOSE')
+#def switch(channel):
+#    if channel == 36:
+#        if GPIO.input(36):
+#            mqtt_client.publish(TOPIC_1,b'LOX_MPV_OPEN')
+#        else:
+#            mqtt_client.publish(TOPIC_1,b'LOX_MPV_CLOSE')
+#    if channel == 18:
+#        if GPIO.input(18):
+#            mqtt_client.publish(TOPIC_1,b'CH4_MPV_OPEN')
+#        else:
+#            mqtt_client.publish(TOPIC_1,b'CH4_MPV_CLOSE')
+#    if channel == 12:
+#        if GPIO.input(12):
+#            mqtt_client.publish(TOPIC_1,b'LAUNCH')
+#        else:
+#            mqtt_client.publish(TOPIC_1,b'ABORT')
+#    if channel == 16:
+#        if GPIO.input(16):
+#            mqtt_client.publish(TOPIC_1,b'IGNITOR_ON')
+#        else:
+#            mqtt_client.publish(TOPIC_1,b'IGNITOR_OFF')
+#    time.sleep(0.2)
 
-def ch4_mpv(channel):
-    if GPIO.input(18):
-        mqtt_client.publish(TOPIC_1,b'CH4_MPV_OPEN')
-    else:
-        mqtt_client.publish(TOPIC_1,b'CH4_MPV_CLOSE')
 
-def ignitor(channel):
-    if GPIO.input(16):
-        mqtt_client.publish(TOPIC_1,b'IGNITOR_ON')
-    else:
-        mqtt_client.publish(TOPIC_1,b'IGNITOR_OFF')
+def switch_loop(channel):
+    while(1):
+        if (GPIO.input(36) == True):
+            mqtt_client.publish(TOPIC_1,b'LOX_MPV_OPEN')
+        else:
+            mqtt_client.publish(TOPIC_1,b'LOX_MPV_CLOSE')
+        if (GPIO.input(18) == True):
+            mqtt_client.publish(TOPIC_1,b'CH4_MPV_OPEN')
+        else:
+            mqtt_client.publish(TOPIC_1,b'CH4_MPV_CLOSE')
+        if (GPIO.input(16) == True):
+            mqtt_client.publish(TOPIC_1,b'IGNITOR_ON')
+        else:
+            mqtt_client.publish(TOPIC_1,b'IGNITOR_OFF')
+        if (GPIO.input(12) == True):
+            mqtt_client.publish(TOPIC_1,b'LAUNCH')
+        while (GPIO.input(12) == True):
+            pass
+        time.sleep(0.2)
 
-def launch(channel):
-    if GPIO.input(12):
-        mqtt_client.publish(TOPIC_1,b'LAUNCH')
-    else:
-        mqtt_client.publish(TOPIC_1,b'ABORT')
-
-GPIO.add_event_detect(12, GPIO.BOTH, callback=launch)
-GPIO.add_event_detect(16, GPIO.BOTH, callback=ignitor)
-GPIO.add_event_detect(18, GPIO.BOTH, callback=ch4_mpv)
-GPIO.add_event_detect(36, GPIO.BOTH, callback=lox_mpv)
+#GPIO.add_event_detect(12, GPIO.BOTH, callback=switch)
+#GPIO.add_event_detect(16, GPIO.BOTH, callback=switch)
+#GPIO.add_event_detect(18, GPIO.BOTH, callback=switch)
+#GPIO.add_event_detect(36, GPIO.BOTH, callback=switch)
 
 class mainthread(QThread):
     STATEsignal = pyqtSignal('PyQt_PyObject')
     DATAsignal = pyqtSignal('PyQt_PyObject')
 
+    def on_disconnect(self, mqtt_client, userdata, rc=0):
+        print("Connection Lost")
+        self.MainApp.alert()
+        self.mqtt_client.loop_stop()
+
     def __init__(self):
         QThread.__init__(self)
         self.connect1()
 
-    def on_disconnect(self, mqtt_client, userdata,rc=0):
-        print("Connection Lost.")
-        self.MainApp.alert()
-        self.mqtt_client.loop_stop()
-
     def connect1(self):
         self.mqtt_client = mqtt.Client()
         self.mqtt_client.on_message = self.subscrib1
-        self.mqtt_client.on_disconnect = self.on_disconnect
         self.mqtt_client.connect(HOST, port=port, keepalive=60)
         self.mqtt_client.subscribe(TOPIC_2)
         self.mqtt_client.subscribe(TOPIC_3)
@@ -136,37 +157,37 @@ class MainApp(QtWidgets.QMainWindow, Ui_MainWindow):
                 p2 = self.Pressure_Key.palette()
                 p2.setColor(self.Pressure_Key.backgroundRole(), Qt.white)
                 self.Pressure_Key.setPalette(p2)
-            if int(A[0]) == 1:
+            if int(A[6]) == 1:
                 p1 = self.Ign_Safety.palette()
                 p1.setColor(self.Ign_Safety.backgroundRole(), Qt.red)
                 self.Ign_Safety.setPalette(p1)
-            if int(A[0]) == 0:
+            if int(A[6]) == 0:
                 p2 = self.Ign_Safety.palette()
                 p2.setColor(self.Ign_Safety.backgroundRole(), Qt.white)
                 self.Ign_Safety.setPalette(p2)
-            if int(A[3]) == 1:
+            if int(A[4]) == 1:
                 p1 = self.MPV_Safety.palette()
                 p1.setColor(self.MPV_Safety.backgroundRole(), Qt.red)
                 self.MPV_Safety.setPalette(p1)
-            if int(A[3]) == 0:
+            if int(A[4]) == 0:
                 p2 = self.MPV_Safety.palette()
                 p2.setColor(self.MPV_Safety.backgroundRole(), Qt.white)
                 self.MPV_Safety.setPalette(p2)
-            if int(A[4]) == 1:
+            if int(A[3]) == 1:
                 p1 = self.MPV_Key.palette()
                 p1.setColor(self.MPV_Key.backgroundRole(), Qt.red)
                 self.MPV_Key.setPalette(p1)
-            if int(A[4]) == 0:
+            if int(A[3]) == 0:
                 p2 = self.MPV_Key.palette()
                 p2.setColor(self.MPV_Key.backgroundRole(), Qt.white)
                 self.MPV_Key.setPalette(p2)
-            if int(A[6]) == 1:
+            if int(A[0]) == 1:
                 p1 = self.Ign_Key.palette()
                 p1.setColor(self.Ign_Key.backgroundRole(), Qt.red)
                 self.Ign_Key.setPalette(p1)
-            if int(A[6]) == 0:
+            if int(A[0]) == 0:
                 p2 = self.Ign_Key.palette()
-                p2.setColor(self.Key.backgroundRole(), Qt.white)
+                p2.setColor(self.Ign_Key.backgroundRole(), Qt.white)
                 self.Ign_Key.setPalette(p2)
         except:
             pass
@@ -278,8 +299,8 @@ def main():
     app = QApplication(sys.argv)
     window = MainApp()
     window.show()
-    '''t1 = threading.Thread(target=MainApp.switch_loop, args=(window, ))
-    t1.start()'''
+    t1 = threading.Thread(target=switch_loop, args=(1, ))
+    t1.start()
     app.exec_()
 
 if __name__ == '__main__':
